@@ -1,13 +1,8 @@
 PATH
-  remote: ../expressions
-  specs:
-    expressions (0.1.0)
-
-PATH
   remote: .
   specs:
-    lowkey (0.3.1)
-      expressions (~> 0.1)
+    lowkey (0.1.0)
+      prism
 
 GEM
   remote: https://rubygems.org/
@@ -73,7 +68,6 @@ PLATFORMS
   x86_64-darwin-22
 
 DEPENDENCIES
-  expressions!
   lowkey!
   pry
   pry-nav
