@@ -23,14 +23,25 @@ module Lowkey
       visitor = Visitor.new(file_proxy:, parent_map:)
       root_node.accept(visitor)
 
-      map_file_path(file_proxy:)
-      map_definitions(file_proxy:)
+      if Lowkey.config.cache
+        map_file_path(file_proxy:)
+        map_definitions(file_proxy:)
+      end
 
       file_proxy
     end
 
     def clear
       keys.clear
+    end
+
+    def config
+      config = Struct.new(:cache)
+      @config ||= config.new(false)
+    end
+
+    def configure
+      yield(config)
     end
 
     private
