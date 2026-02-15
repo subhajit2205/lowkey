@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require_relative 'methods'
+
 module Lowkey
-  class A; end
+  class A
+    extend Methods
+
+    method_one
+  end
 end

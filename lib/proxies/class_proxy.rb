@@ -5,19 +5,26 @@ require 'forwardable'
 module Lowkey
   class ClassProxy
     attr_reader :namespace, :file_proxy, :start_line, :end_line
-    attr_accessor :private_start_line, :class_methods, :instance_methods, :method_calls
+    attr_writer :method_calls
+    attr_accessor :private_start_line, :class_methods, :instance_methods
 
     def initialize(node:, namespace:, file_proxy:)
       @namespace = namespace
       @file_proxy = file_proxy
 
-      @start_line = node.class_keyword_loc.start_line
-      @end_line = node.end_keyword_loc.end_line # class_keyword_loc ?
+      @start_line = node.respond_to?(:class_keyword_loc) ? node.class_keyword_loc.start_line : 0
+      @end_line = node.respond_to?(:end_keyword_loc) ? node.end_keyword_loc.end_line : 0
       @private_start_line = nil
 
       @class_methods = {}
       @instance_methods = {}
       @method_calls = []
+    end
+
+    def method_calls(method_names = nil)
+      return @method_calls if method_names.nil?
+
+      @method_calls.filter { |method_call| method_names.include?(method_call.name) }
     end
 
     private
