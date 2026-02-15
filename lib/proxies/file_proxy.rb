@@ -19,6 +19,7 @@ module Lowkey
 
     def class_proxy(node:, parent_map:)
       namespace = namespace(node:, parent_map:).reverse.join('::')
+      namespace = 'Object' if namespace.empty?
       @definitions[namespace] ||= ClassProxy.new(node:, namespace:, file_proxy: self)
     end
 
