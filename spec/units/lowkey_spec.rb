@@ -6,10 +6,6 @@ require_relative '../../lib/proxies/file_proxy'
 RSpec.describe Lowkey do
   let(:file_path) { 'spec/fixtures/a.rb' }
 
-  before do
-    Lowkey.configure { |config| config.cache = true }
-  end
-
   after do
     Lowkey.clear
   end
@@ -33,7 +29,6 @@ RSpec.describe Lowkey do
 
       after do
         Lowkey.configure { |config| config.cache = true }
-        Lowkey.clear
       end
 
       it 'does not cache file proxy' do

@@ -37,7 +37,7 @@ module Lowkey
 
     def config
       config = Struct.new(:cache)
-      @config ||= config.new(false)
+      @config ||= config.new(true)
     end
 
     def configure

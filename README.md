@@ -17,9 +17,8 @@ Copy and paste the following and change the defaults to configure Lowkey:
 Lowkey.configure do |config|
   # A big benefit of Lowkey is its caching of abstract syntax trees, file proxies and class proxies.
   # But to save memory you should clear them after the "class load"/setup stage of your application.
-  # There is no "setup complete" stage in Ruby so it can't be automated, why it defaults to "false".
-  # Set to "true" then call "Lowkey.clear" after you no longer need Lowkey. Example: in a boot file.
-  config.cache = false
+  # Set to "false" or call "Lowkey.clear" after you no longer need Lowkey, such as in a boot script.
+  config.cache = true
 end
 ```
 
