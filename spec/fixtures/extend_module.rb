@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'methods'
+require_relative 'mock_module'
 
 module Lowkey
   class ExtendModule
-    extend Methods
+    extend MockModule
 
     method_one
   end
