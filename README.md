@@ -2,64 +2,123 @@
 
 # Lowkey
 
-PRISM is amazing and opens a new way to access metadata in Ruby. However:
-- Loading and reloading the Abstract Syntax Tree (AST) multiple times is inefficient
-- Higher level abstractions of the AST (classes, methods) are more useful
+PRISM is amazing and opens up new ways to access metadata in Ruby. However:
+- Loading the Abstract Syntax Tree (AST) multiple times is inefficient
+- We need higher level abstractions such as classes and methods
 - Navigating the AST can be difficult
 
-Lowkey provides a central API to make storing and accessing of the AST by multiple gems much easier.  
-It's the secret sauce behind [LowType](https://github.com/low-rb/low_type), [LowLoad](https://github.com/low-rb/low_load) and [Raindeer](https://github.com/raindeer-rb/raindeer) in general.
+Lowkey provides a central API for storing this metadata once and accessing it multiple times. It's the secret sauce 🌶️ behind [LowType](https://github.com/low-rb/low_type), [LowLoad](https://github.com/low-rb/low_load) and [Raindeer](https://github.com/raindeer-rb/raindeer) in general.
 
 ## Usage
 
+Load a file:
 ```ruby
 Lowkey.load(file_path: 'my_class.rb')
+```
+
+Access the resulting proxies:
+```ruby
 Lowkey['my_class.rb'] # => FileProxy
-Lowkey['MyNamespace::MyClass'] # => ClassProxy
+Lowkey['my_class.rb']['MyNamespace::MyClass'] # => ClassProxy
 ```
 
 ## Proxies
 
-Proxies are a higher level of abstraction above the Abstract Syntax Tree, to allow easy access to basic metadata.
+Proxies provide a "flat" abstraction over the Abstract Syntax Tree.
 
 **Proxy Types:**
-- `FileProxy`
-- `ClassProxy`
+- `FileProxy` - The file path, its definitions and dependencies
+- `ClassProxy` - The class and its methods
 - `MethodProxy` [UNRELEASED]
 - `ParamProxy` [UNRELEASED]
 - `ReturnProxy` [UNRELEASED]
 
-## Queries [UNRELEASED]
+### Method access
 
-Queries allow you to get nodes within the AST via simple keypath syntax:
 ```ruby
-Lowkey['MyNamespace::MyClass.my_method'] # => MethodDefNode
+Lowkey['my_class.rb']['MyNamespace::MyClass'][:my_method] # => MethodProxy
 ```
 
-## Mutations [UNRELEASED]
+## Queries
 
-Using the same keypath query syntax we can manipulate the AST:
+Queries access nested nodes within the AST via keypath syntax:
 ```ruby
-method_proxy = MethodProxy.new(my_params)
-Lowkey['MyNamespace::MyClass.my_method'] = method_proxy
+Lowkey['my_class.rb::MyNamespace::MyClass.my_method'] # => MethodDefNode
 ```
-In the above example we have replaced the existing method with our own, using `MethodProxy` to easily build a new method.
 
-## Exports [UNRELEASED]
+A query can start at any proxy and still use the keypath syntax:
+```ruby
+# Query from a file proxy.
+file_proxy = Lowkey['my_class.rb']
+file_proxy['MyNamespace::MyClass.my_method'] # => MethodDefNode
 
-Export a manipulated entities to memory with:
+# Query from a class proxy.
+class_proxy = Lowkey['my_class.rb']['MyNamespace::MyClass']
+class_proxy['.my_method'] # => MethodDefNode
+```
+
+ℹ️ Query keypaths contain dots "`.`" and return nodes. They target the `name` attribute of nodes.
+
+## Mutations
+
+You can mutate a file using either Proxies or Queries:
+
+|             | **Difficulty** | **Structure** | **Mutations**                                          |
+|-------------|----------------|---------------|--------------------------------------------------------|
+| **Proxies** | Easy           | Flat          | Preserves existing code and line numbers when possible |
+| **Queries** | Medium         | Nested        | Generates new code from the Abstract Syntax Tree       |
+
+ℹ️ Both approaches can be mixed together, for example; using queries to get data for a proxy.
+
+### Proxy Mutations
+
+Replacing a method's source code:
+```ruby
+Lowkey['my_class.rb']['MyNamespace::MyClass'][:my_method].source_code = my_string_of_code
+```
+
+### Query Mutations [UNRELEASED]
+
+Using the query keypath we can manipulate the AST:
+```ruby
+Lowkey['my_class.rb::MyNamespace::MyClass.my_method'] = my_node
+```
+
+## Exports
+
+### Proxy Exports
+
+Export the source code for mutated proxies to memory:
 ```ruby
 Lowkey['my_class.rb'].export
-Lowkey['MyNamespace::MyClass'].export
-Lowkey['MyNamespace::MyClass.my_method'].export
+Lowkey['my_class.rb']['MyNamespace::MyClass'].export
+Lowkey['my_class.rb']['MyNamespace::MyClass'][:my_method].export
 ```
 
-Save manipulated entities to disk with:
+Save the source code for mutated proxies to disk: [UNRELEASED]
 ```ruby
 Lowkey['my_class.rb'].save(file_path:) # Replaces entire file.
-Lowkey['MyNamespace::MyClass'].save(file_path:) # Replaces part of a file.
-Lowkey['MyNamespace::MyClass.my_method'].save(file_path:) # Replaces part of a file.
+Lowkey['my_class.rb']['MyNamespace::MyClass'].save(file_path:) # Replaces part of a file.
+Lowkey['my_class.rb']['MyNamespace::MyClass'][:my_method].save(file_path:) # Replaces part of a file.
 ```
+
+### Query Exports [UNRELEASED]
+
+Export generated code for mutated nodes to memory: [UNRELEASED]
+```ruby
+Lowkey['my_class.rb.root_node'].export # Special selector for the top level node.
+Lowkey['my_class.rb::MyNamespace::MyClass.root_node'].export
+Lowkey['my_class.rb::MyNamespace::MyClass.my_method'].export
+```
+
+Save generated code for mutated nodes to disk: [UNRELEASED]
+```ruby
+Lowkey['my_class.rb.root_node'].save(file_path:) # Replaces entire file.
+Lowkey['my_class.rb::MyNamespace::MyClass'].save(file_path:) # Replaces entire file.
+Lowkey['my_class.rb::MyNamespace::MyClass.my_method'].save(file_path:) # Replaces entire file.
+```
+
+ℹ️ Code is generated from the AST and will not match the source code that was originally loaded.
 
 ## Config
 
