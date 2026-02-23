@@ -31,31 +31,12 @@ module Lowkey
     end
 
     class << self
-      # Only a lambda defined immediately after a method's parameters/block is considered a return type expression.
-      def return_type(method_node:)
-        # Method statements.
-        statements_node = method_node.compact_child_nodes.find { |node| node.is_a?(Prism::StatementsNode) }
+      def class_method?(method_node:, parent_map:)
+        return true if method_node.is_a?(::Prism::DefNode) && method_node.receiver.instance_of?(Prism::SelfNode) # self.method_name
+        return true if method_node.is_a?(::Prism::SingletonClassNode) # class << self
 
-        # Block statements.
-        if statements_node.nil?
-          block_node = method_node.compact_child_nodes.find { |node| node.is_a?(Prism::BlockNode) }
-          statements_node = block_node.compact_child_nodes.find { |node| node.is_a?(Prism::StatementsNode) } if block_node
-        end
-
-        return nil if statements_node.nil? # Sometimes developers define methods without code inside them.
-
-        node = statements_node.body.first
-        return node if node.is_a?(Prism::LambdaNode)
-
-        nil
-      end
-
-      def class_method?(node:, parent_map:)
-        return true if node.is_a?(::Prism::DefNode) && node.receiver.instance_of?(Prism::SelfNode) # self.method_name
-        return true if node.is_a?(::Prism::SingletonClassNode) # class << self
-
-        if (parent_node = parent_map[node])
-          return class_method?(node: parent_node, parent_map:)
+        if (parent_node = parent_map[method_node])
+          return class_method?(method_node: parent_node, parent_map:)
         end
 
         false

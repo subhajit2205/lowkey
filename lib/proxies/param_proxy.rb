@@ -4,16 +4,18 @@ require_relative '../interfaces/proxy'
 
 module Lowkey
   class ParamProxy < Proxy
-    attr_reader :expression, :name, :type, :position
+    attr_reader :name, :type, :position
+    attr_accessor :expression
 
-    # TODO: Refactor file path, start line and scope into "meta scope" model.
-    def initialize(expression:, name:, type:, file_path:, start_line:, scope:, position: nil) # rubocop:disable Metrics/ParameterLists
+    # TODO: Refactor file path, start line and scope into "scope" model.
+    def initialize(file_path:, start_line:, scope:, name:, type:, position: nil) # rubocop:disable Metrics/ParameterLists
       super(file_path:, start_line:, scope:)
 
-      @expression = expression
       @name = name
       @type = type
       @position = position
+
+      @expression = nil
     end
 
     def required?

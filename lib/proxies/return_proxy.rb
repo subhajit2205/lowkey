@@ -4,13 +4,14 @@ require_relative '../interfaces/proxy'
 
 module Lowkey
   class ReturnProxy < Proxy
-    attr_reader :type_expression, :name
+    attr_reader :name
+    attr_accessor :expression
 
-    def initialize(type_expression:, name:, file_path:, start_line:, scope:)
+    def initialize(file_path:, start_line:, scope:, name:)
       super(file_path:, start_line:, scope:)
 
-      @type_expression = type_expression
       @name = name
+      @expression = nil
     end
   end
 end

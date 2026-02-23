@@ -14,7 +14,7 @@ RSpec.describe 'FileProxy' do
     end
 
     it 'returns a method proxy' do
-      expect(file_proxy['Lowkey::MockNode.render']).to be_an_instance_of(Prism::DefNode)
+      expect(file_proxy['Lowkey::MockNode.render']).to be_an_instance_of(Lowkey::MethodProxy)
     end
   end
 end
