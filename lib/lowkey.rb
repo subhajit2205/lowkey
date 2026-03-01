@@ -2,6 +2,7 @@
 
 require 'prism'
 
+require_relative 'adapters/adapter_loader'
 require_relative 'visitors/visitor'
 require_relative 'proxies/file_proxy'
 
@@ -22,6 +23,8 @@ module Lowkey
       parent_map = ParentMap.new(root_node:)
       visitor = Visitor.new(file_proxy:, parent_map:)
       root_node.accept(visitor)
+
+      AdapterLoader.load(file_proxy:)
 
       if Lowkey.config.cache
         map_file_path(file_proxy:)
