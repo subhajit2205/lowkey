@@ -51,6 +51,10 @@ module Lowkey
 
     def map_file_path(file_proxy:)
       keys[file_proxy.path] = file_proxy
+
+      # Map absolute paths to project root/relative paths.
+      project_path = file_proxy.path.delete_prefix(Dir.pwd).delete_prefix('/')
+      keys[project_path] = file_proxy if project_path != file_proxy.path
     end
 
     def map_definitions(file_proxy:)
