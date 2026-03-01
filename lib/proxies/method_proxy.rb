@@ -16,7 +16,7 @@ module Lowkey
       @name = name
       @params = param_proxies
       @named_params = name_params
-      @sorted_params = sort_params
+      @tagged_params = tag_params
       @return_proxy = return_proxy
     end
 
@@ -25,8 +25,8 @@ module Lowkey
       key.start_with?('.') ? query(node: @node, namespace: nil, name: key.delete_prefix('.')) : @named_params[key]
     end
 
-    def sorted_params(sorting)
-      @sorted_params[sorting]
+    def tagged_params(tag)
+      @tagged_params[tag] || []
     end
 
     def expressions?
@@ -41,17 +41,18 @@ module Lowkey
       end
     end
 
-    def sort_params
-      sorting = { required: [], optional: [], positional: [], keyword: [] }
+    def tag_params
+      tags = { required: [], optional: [], positional: [], keyword: [], default_value: [] }
 
       @params.each do |param|
-        sorting[:required] << param if %i[pos_req key_req].include?(param.type)
-        sorting[:optional] << param if %i[pos_opt key_opt].include?(param.type)
-        sorting[:positional] << param if %i[pos_req pos_opt].include?(param.type)
-        sorting[:keyword] << param if %i[key_req key_opt].include?(param.type)
+        tags[:required] << param if %i[pos_req key_req].include?(param.type)
+        tags[:optional] << param if %i[pos_opt key_opt].include?(param.type)
+        tags[:positional] << param if %i[pos_req pos_opt].include?(param.type)
+        tags[:keyword] << param if %i[key_req key_opt].include?(param.type)
+        tags[:default_value] << param if param.default_value
       end
 
-      sorting
+      tags
     end
   end
 end
