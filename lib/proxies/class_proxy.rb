@@ -7,8 +7,7 @@ module Lowkey
     include Query
 
     attr_reader :namespace, :start_line, :end_line
-    attr_writer :method_calls
-    attr_accessor :private_start_line, :methods, :class_methods, :instance_methods
+    attr_accessor :private_start_line, :keyed_methods, :class_methods, :instance_methods, :method_calls
 
     def initialize(node:, namespace:, file_proxy:)
       @node = node
@@ -20,7 +19,7 @@ module Lowkey
       @end_line = file_proxy.end_line if namespace == 'Object'
       @private_start_line = nil
 
-      @methods = {}
+      @keyed_methods = {}
       @class_methods = {}
       @instance_methods = {}
 
@@ -28,7 +27,7 @@ module Lowkey
     end
 
     def [](key)
-      key.start_with?('.') ? query(node: @node, namespace: nil, name: key.delete_prefix('.')) : @methods[key]
+      key.start_with?('.') ? query(node: @node, namespace: nil, name: key.delete_prefix('.')) : @keyed_methods[key]
     end
 
     def method_calls(method_names = nil)

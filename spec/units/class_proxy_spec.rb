@@ -23,7 +23,7 @@ RSpec.describe Lowkey::ClassProxy do
     context 'with method proxy' do
       before do
         method_proxy = Lowkey::MethodProxy.new(file_path: 'mock/path', start_line: 123, scope: 'mock scope', name: 'mock name')
-        class_proxy.methods[:render] = method_proxy
+        class_proxy.keyed_methods[:render] = method_proxy
       end
 
       it 'returns a method proxy' do
