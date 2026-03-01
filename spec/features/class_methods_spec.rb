@@ -7,21 +7,19 @@ RSpec.describe Lowkey::ClassMethods do
 
   let(:file_proxy) { Lowkey.load(file_path: 'spec/fixtures/class_methods.rb') }
 
-  describe '.class_methods' do
-    it 'has inline class method' do
-      expect(class_methods.class_methods[:inline_class_method]).not_to be_nil
-    end
+  it 'has inline class method' do
+    expect(class_methods[:inline_class_method]).not_to be_nil
+  end
 
-    it 'has inline class method with arg' do
-      expect(class_methods.class_methods[:inline_class_method_with_arg]).not_to be_nil
-    end
+  it 'has inline class method with arg' do
+    expect(class_methods[:inline_class_method_with_arg]).not_to be_nil
+  end
 
-    it 'has class method' do
-      expect(class_methods.class_methods[:class_method_with_arg]).not_to be_nil
-    end
+  it 'has class method' do
+    expect(class_methods[:class_method_with_arg]).not_to be_nil
+  end
 
-    it 'has class method with arg' do
-      expect(class_methods.class_methods[:class_method_with_arg_and_default_value]).not_to be_nil
-    end
+  it 'has class method with arg' do
+    expect(class_methods[:class_method_with_arg_and_default_value]).not_to be_nil
   end
 end
