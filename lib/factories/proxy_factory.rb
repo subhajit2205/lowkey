@@ -25,9 +25,9 @@ module Lowkey
           name = param.name
           scope = name
           start_line = param.start_line
-          default_value = param.respond_to?(:value) ? param.value.slice : nil
+          value = param.respond_to?(:value) ? param.value.slice : ':LOWKEY_UNDEFINED'
 
-          ParamProxy.new(file_path:, start_line:, scope:, name:, type:, position:, default_value:)
+          ParamProxy.new(file_path:, start_line:, scope:, name:, type:, position:, value:)
         end
       end
 

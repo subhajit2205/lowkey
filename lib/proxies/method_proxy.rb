@@ -46,14 +46,14 @@ module Lowkey
     end
 
     def tag_params
-      tags = { required: [], optional: [], positional: [], keyword: [], default_value: [] }
+      tags = { required: [], optional: [], positional: [], keyword: [], value: [] }
 
       @params.each do |param|
         tags[:required] << param if %i[pos_req key_req].include?(param.type)
         tags[:optional] << param if %i[pos_opt key_opt].include?(param.type)
         tags[:positional] << param if %i[pos_req pos_opt].include?(param.type)
         tags[:keyword] << param if %i[key_req key_opt].include?(param.type)
-        tags[:default_value] << param if param.default_value
+        tags[:value] << param if param.value != :LOWKEY_UNDEFINED
       end
 
       tags
