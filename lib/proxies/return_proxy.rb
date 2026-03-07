@@ -7,7 +7,7 @@ module Lowkey
     attr_reader :name, :value
     attr_accessor :expression
 
-    def initialize(file_path:, start_line:, scope:, name:, value: :LOWKEY_UNDEFINED, expression: nil)
+    def initialize(file_path:, start_line:, scope:, name:, value: :LOWKEY_UNDEFINED, expression: nil) # rubocop:disable Metrics/ParameterLists
       super(file_path:, start_line:, scope:)
 
       @name = name
