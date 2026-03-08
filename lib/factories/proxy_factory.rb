@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'expressions'
-
 require_relative '../proxies/method_proxy'
 require_relative '../proxies/param_proxy'
 require_relative '../proxies/return_proxy'
