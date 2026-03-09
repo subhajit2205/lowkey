@@ -15,6 +15,14 @@ module Lowkey
         Scope.new(file_path:, scope:, start_line:, end_line:)
       end
 
+      def param_scope(param_node:, file_path:)
+        scope = param_node.name
+        start_line = param_node.start_line
+        end_line = param_node.end_line
+
+        Scope.new(file_path:, scope:, start_line:, end_line:)
+      end
+
       def method_scope(method_node:, file_path:)
         scope = method_node.name
         start_line = method_node.start_line

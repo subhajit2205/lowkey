@@ -27,10 +27,9 @@ module Lowkey
 
         params = [*parameters_node.requireds, *parameters_node.optionals, *parameters_node.keywords]
         params.map.with_index do |param, position|
-          type = param_types[param.class]
           name = param.name
-          scope = name
-          start_line = param.start_line
+          scope = ScopeFactory.param_scope(param_node: param, file_path:)
+          type = param_types[param.class]
           value = param.respond_to?(:value) ? param.value.slice : ':LOWKEY_UNDEFINED'
 
           ParamProxy.new(name:, scope:, type:, position:, value:)
