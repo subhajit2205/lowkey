@@ -5,6 +5,12 @@ require_relative '../models/scope'
 module Lowkey
   class ScopeFactory
     class << self
+      def file_scope(root_node:, file_path:)
+        end_line = root_node.respond_to?(:end_line) ? root_node.end_line : nil
+
+        Scope.new(file_path:, scope: 'Object', start_line: 0, end_line:)
+      end
+
       # @param node: Either the class node or the main object node.
       def class_scope(node:, namespace:, file_path:)
         start_line = node.respond_to?(:class_keyword_loc) ? node.class_keyword_loc.start_line : 0

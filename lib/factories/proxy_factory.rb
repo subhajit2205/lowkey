@@ -2,6 +2,7 @@
 
 require_relative '../factories/scope_factory'
 require_relative '../proxies/class_proxy'
+require_relative '../proxies/file_proxy'
 require_relative '../proxies/method_proxy'
 require_relative '../proxies/param_proxy'
 require_relative '../proxies/return_proxy'
@@ -9,6 +10,11 @@ require_relative '../proxies/return_proxy'
 module Lowkey
   class ProxyFactory
     class << self
+      def file_proxy(root_node:, file_path:)
+        scope = ScopeFactory.file_scope(root_node:, file_path:)
+        FileProxy.new(root_node:, scope:)
+      end
+
       def class_proxy(node:, namespace:, file_path:)
         scope = ScopeFactory.class_scope(node:, namespace:, file_path:)
         name = node.respond_to?(:name) ? node.name : 'Object'

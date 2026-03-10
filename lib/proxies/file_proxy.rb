@@ -1,22 +1,20 @@
 # frozen_string_literal: true
 
+require_relative '../interfaces/proxy'
 require_relative '../proxies/class_proxy'
 require_relative '../queries/query'
 
 module Lowkey
-  class FileProxy
+  class FileProxy < Proxy
     include Query
 
-    attr_reader :root_node, :file_path, :start_line, :end_line
+    attr_reader :root_node
     attr_accessor :definitions, :dependencies
 
-    def initialize(file_path:, root_node:)
-      @file_path = file_path
+    def initialize(root_node:, scope:)
       @root_node = root_node
-
-      @start_line = 0
-      @end_line = root_node.respond_to?(:end_line) ? root_node.end_line : nil
-
+      @scope = scope
+      
       @definitions = {}
       @dependencies = []
     end

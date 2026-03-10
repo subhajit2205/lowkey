@@ -3,6 +3,7 @@
 require 'prism'
 
 require_relative 'adapters/adapter_loader'
+require_relative 'factories/proxy_factory'
 require_relative 'maps/parent_map'
 require_relative 'visitors/visitor'
 require_relative 'proxies/file_proxy'
@@ -19,7 +20,7 @@ module Lowkey
 
     def load(file_path)
       root_node = Prism.parse_file(file_path).value
-      file_proxy = FileProxy.new(file_path:, root_node:)
+      file_proxy = ProxyFactory.file_proxy(root_node:, file_path:)
 
       parent_map = ParentMap.new(root_node:)
       visitor = Visitor.new(file_proxy:, parent_map:)
