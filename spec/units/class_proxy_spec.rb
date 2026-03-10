@@ -23,7 +23,7 @@ RSpec.describe Lowkey::ClassProxy do
   describe '.[]' do
     context 'with method proxy' do
       before do
-        scope = Lowkey::Scope.new(file_path: 'mock/path', scope: 'mock scope', start_line: 123)
+        scope = Lowkey::Scope.new(file_path: 'mock/path', scope: 'mock scope', lines: [], start_line: 123)
         method_proxy = Lowkey::MethodProxy.new(name: 'mock name', scope:)
         class_proxy.keyed_methods[:render] = method_proxy
       end

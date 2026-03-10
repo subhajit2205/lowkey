@@ -18,11 +18,11 @@ module Lowkey
       class_proxy = @file_proxy[namespace]
       
       name = method_node.name
-      scope = ScopeFactory.method_scope(method_node:, file_path: @file_proxy.file_path)
+      scope = ScopeFactory.method_scope(method_node:, file_path: @file_proxy.file_path, lines: @file_proxy.lines)
       
       param_proxies = ProxyFactory.param_proxies(parameters_node: method_node.parameters, file_path: @file_proxy.file_path, scope:)
       return_proxy = ProxyFactory.return_proxy(name:, method_node:, scope:)
-      method_proxy = MethodProxy.new(scope:, name:, param_proxies:, return_proxy:)
+      method_proxy = MethodProxy.new(name:, scope:, param_proxies:, return_proxy:)
       
       class_proxy.keyed_methods[method_node.name] = method_proxy
       

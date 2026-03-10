@@ -11,6 +11,7 @@ module Lowkey
     attr_reader :name
 
     def_delegator :@scope, :file_path
+    def_delegator :@scope, :lines
     def_delegator :@scope, :start_line
     def_delegator :@scope, :scope
 

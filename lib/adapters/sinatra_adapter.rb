@@ -5,9 +5,9 @@ require_relative '../interfaces/adapter'
 
 module Lowkey
   class SinatraAdapter < Adapter
-    def initialize(class_proxy:)
+    def initialize(file_proxy:, class_proxy:)
+      @file_proxy = file_proxy
       @class_proxy = class_proxy
-      @file_path = class_proxy.file_path
     end
 
     def load # rubocop:disable Metrics/AbcSize
@@ -21,7 +21,7 @@ module Lowkey
         pattern = arguments_node.arguments.first.content
         route = "#{method_call_node.name.upcase} #{pattern}"
         name = route
-        scope = ScopeFactory.method_call_scope(method_call_node:, arguments_node:, file_path:)
+        scope = ScopeFactory.method_call_scope(method_call_node:, arguments_node:, file_path:, lines:)
 
         next unless (return_proxy = ProxyFactory.return_proxy(method_node: method_call_node, name:, scope:))
 
@@ -34,6 +34,12 @@ module Lowkey
 
     private
 
-    attr_reader :file_path
+    def file_path
+      @file_proxy.file_path
+    end
+
+    def lines
+      @file_proxy.lines
+    end
   end
 end

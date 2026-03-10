@@ -9,7 +9,7 @@ module Lowkey
       def load(file_proxy:)
         class_proxies = file_proxy.definitions.values.filter { |definition| definition.instance_of?(ClassProxy) }
         class_proxies.each do |class_proxy|
-          SinatraAdapter.new(class_proxy:).load
+          SinatraAdapter.new(file_proxy:, class_proxy:).load
         end
       end
     end

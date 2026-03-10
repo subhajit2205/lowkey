@@ -15,13 +15,13 @@ module Lowkey
         FileProxy.new(root_node:, scope:)
       end
 
-      def class_proxy(node:, namespace:, file_path:)
-        scope = ScopeFactory.class_scope(node:, namespace:, file_path:)
+      def class_proxy(node:, namespace:, file_path:, lines:)
+        scope = ScopeFactory.class_scope(node:, namespace:, file_path:, lines:)
         name = node.respond_to?(:name) ? node.name : 'Object'
         ClassProxy.new(node:, name:, namespace:, scope:)
       end
 
-      def param_proxies(parameters_node:, file_path:, scope:)
+      def param_proxies(parameters_node:, scope:, file_path:)
         return [] if parameters_node.nil?
 
         param_types = {
@@ -34,7 +34,7 @@ module Lowkey
         params = [*parameters_node.requireds, *parameters_node.optionals, *parameters_node.keywords]
         params.map.with_index do |param, position|
           name = param.name
-          scope = ScopeFactory.param_scope(param_node: param, file_path:)
+          scope = ScopeFactory.param_scope(param_node: param, file_path:, lines: scope.lines)
           type = param_types[param.class]
           value = param.respond_to?(:value) ? param.value.slice : ':LOWKEY_UNDEFINED'
 
