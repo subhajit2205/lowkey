@@ -15,18 +15,12 @@ module Lowkey
     
     def visit(method_node) # rubocop:disable Metrics/AbcSize
       namespace = namespace(node: method_node, parent_map:)
-      class_proxy = @file_proxy[namespace]
-      
-      name = method_node.name
-      source = SourceFactory.method_source(method_node:, file_path: @file_proxy.file_path, lines: @file_proxy.lines)
-      
-      param_proxies = ProxyFactory.param_proxies(parameters_node: method_node.parameters, file_path: @file_proxy.file_path, source:)
-      return_proxy = ProxyFactory.return_proxy(name:, method_node:, source:)
-      method_proxy = MethodProxy.new(name:, source:, param_proxies:, return_proxy:)
-      
+      class_proxy = file_proxy[namespace]
+      method_proxy = ProxyFactory.method_proxy(method_node:, file_proxy:)
+
       class_proxy.keyed_methods[method_node.name] = method_proxy
       
-      # TODO: Implemented as sorted methods similar to sorted params.
+      # TODO: Implemented as tagged methods similar to tagged params.
       if ClassProxy.class_method?(method_node:, parent_map:)
         class_proxy.class_methods[method_node.name] = method_proxy
       else
@@ -36,6 +30,6 @@ module Lowkey
 
     private
 
-    attr_reader :parent_map
+    attr_reader :file_proxy, :parent_map
   end
 end

@@ -21,6 +21,16 @@ module Lowkey
         ClassProxy.new(node:, name:, namespace:, source:)
       end
 
+      def method_proxy(method_node:, file_proxy:)
+        name = method_node.name
+        source = SourceFactory.method_source(method_node:, file_path: file_proxy.file_path, lines: file_proxy.lines)
+
+        param_proxies = param_proxies(parameters_node: method_node.parameters, file_path: file_proxy.file_path, source:)
+        return_proxy = return_proxy(name:, method_node:, source:)
+
+        MethodProxy.new(name:, source:, param_proxies:, return_proxy:)
+      end
+
       def param_proxies(parameters_node:, source:, file_path:)
         return [] if parameters_node.nil?
 
