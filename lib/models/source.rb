@@ -13,5 +13,24 @@ module Lowkey
       @end_line = end_line
       @lines = lines
     end
+
+    def wrap(prefix:, suffix:)
+      lines[start_index] = prefix.to_s + lines[start_index]
+      lines[end_index] = lines[end_index] + suffix.to_s
+    end
+
+    def export
+      lines.join
+    end
+
+    private
+
+    def start_index
+      start_line - 1
+    end
+
+    def end_index
+      end_line - 1
+    end
   end
 end
