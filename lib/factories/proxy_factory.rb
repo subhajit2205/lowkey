@@ -60,7 +60,6 @@ module Lowkey
         return_node = find_return_node(method_node:)
         return nil if return_node.nil?
 
-        start_line = return_node.start_line
         value = return_node.body.slice
 
         ReturnProxy.new(name:, source:, value:)

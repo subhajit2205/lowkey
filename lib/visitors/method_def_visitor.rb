@@ -12,14 +12,14 @@ module Lowkey
       @file_proxy = file_proxy
       @parent_map = parent_map
     end
-    
-    def visit(method_node) # rubocop:disable Metrics/AbcSize
+
+    def visit(method_node)
       namespace = namespace(node: method_node, parent_map:)
       class_proxy = file_proxy[namespace]
       method_proxy = ProxyFactory.method_proxy(method_node:, file_proxy:)
 
       class_proxy.keyed_methods[method_node.name] = method_proxy
-      
+
       # TODO: Implemented as tagged methods similar to tagged params.
       if ClassProxy.class_method?(method_node:, parent_map:)
         class_proxy.class_methods[method_node.name] = method_proxy

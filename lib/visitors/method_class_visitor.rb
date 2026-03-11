@@ -13,7 +13,7 @@ module Lowkey
 
       create_root_class
     end
-    
+
     def visit(node)
       namespace = namespace(node:, parent_map:)
       class_proxy = ProxyFactory.class_proxy(node:, namespace:, file_path:, lines:)
