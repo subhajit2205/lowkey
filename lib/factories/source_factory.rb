@@ -21,6 +21,15 @@ module Lowkey
         Source.new(file_path:, scope:, lines:, start_line:, end_line:)
       end
 
+      def method_source(method_node:, file_path:, lines:)
+        scope = method_node.name
+        start_line = method_node.start_line
+        end_line = method_node.end_line
+        end_line = end_line_from_indent(method_node:, lines:) if end_line > lines.count
+
+        Source.new(file_path:, scope:, lines:, start_line:, end_line:)
+      end
+
       def param_source(param_node:, file_path:, lines:)
         scope = param_node.name
         start_line = param_node.start_line
@@ -29,13 +38,12 @@ module Lowkey
         Source.new(file_path:, scope:, lines:, start_line:, end_line:)
       end
 
-      def method_source(method_node:, file_path:, lines:)
-        scope = method_node.name
-        start_line = method_node.start_line
-        end_line = method_node.end_line
-        end_line = end_line_from_indent(method_node:, lines:) if end_line > lines.count
+      def body_source(method_source:)
+        # TODO: Handle multi-line return proxy which increases body start line.
+        start_line = method_source.start_line + 1
+        end_line = method_source.end_line - 1
 
-        Source.new(file_path:, scope:, lines:, start_line:, end_line:)
+        Source.new(file_path: method_source.file_path, scope: method_source.scope, lines: method_source.lines, start_line:, end_line:)
       end
 
       def method_call_source(method_call_node:, arguments_node:, file_path:, lines:)

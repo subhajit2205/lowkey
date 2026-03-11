@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../factories/source_factory'
+require_relative '../proxies/body_proxy'
 require_relative '../proxies/class_proxy'
 require_relative '../proxies/file_proxy'
 require_relative '../proxies/method_proxy'
@@ -23,12 +24,15 @@ module Lowkey
 
       def method_proxy(method_node:, file_proxy:)
         name = method_node.name
-        source = SourceFactory.method_source(method_node:, file_path: file_proxy.file_path, lines: file_proxy.lines)
 
-        param_proxies = param_proxies(parameters_node: method_node.parameters, file_path: file_proxy.file_path, source:)
-        return_proxy = return_proxy(name:, method_node:, source:)
+        method_source = SourceFactory.method_source(method_node:, file_path: file_proxy.file_path, lines: file_proxy.lines)
+        body_source = SourceFactory.body_source(method_source:)
 
-        MethodProxy.new(name:, source:, param_proxies:, return_proxy:)
+        param_proxies = param_proxies(parameters_node: method_node.parameters, file_path: file_proxy.file_path, source: method_source)
+        body_proxy = BodyProxy.new(name:, source: body_source)
+        return_proxy = return_proxy(name:, method_node:, source: method_source)
+
+        MethodProxy.new(name:, source: method_source, param_proxies:, body_proxy:, return_proxy:)
       end
 
       def param_proxies(parameters_node:, source:, file_path:)

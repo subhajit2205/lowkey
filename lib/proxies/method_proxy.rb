@@ -7,15 +7,17 @@ module Lowkey
   class MethodProxy < Proxy
     include Query
 
-    attr_reader :params, :return_proxy
+    attr_reader :params, :body, :return_proxy
 
-    def initialize(name:, source:, param_proxies: [], return_proxy: nil)
+    def initialize(name:, source:, param_proxies: [], body_proxy: nil, return_proxy: nil)
       super(name:, source:)
 
       @params = param_proxies
+      @body = body_proxy
+      @return_proxy = return_proxy
+
       @named_params = name_params
       @tagged_params = tag_params
-      @return_proxy = return_proxy
     end
 
     def [](key)
