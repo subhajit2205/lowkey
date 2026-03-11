@@ -2,7 +2,7 @@
 
 # Lowkey
 
-PRISM is amazing and opens up new ways to access metadata in Ruby. However:
+Prism is amazing and opens up new ways to access metadata in Ruby. However:
 - Loading the Abstract Syntax Tree (AST) multiple times is inefficient
 - We need higher level abstractions such as classes and methods
 - Navigating the AST can be difficult
@@ -39,6 +39,8 @@ Proxies provide a "flat" abstraction over the Abstract Syntax Tree.
 ```ruby
 Lowkey['my_class.rb']['MyNamespace::MyClass'][:my_method] # => MethodProxy
 ```
+
+ℹ️ For more information on proxies see the [Proxy API](#proxy).
 
 ## Queries
 
@@ -152,6 +154,26 @@ sequenceDiagram
   Sources--)FileProxy: Mutates source code
   Lowkey->>Lowkey: Stores proxies
 ```
+
+## API
+
+### Lowkey
+
+**Methods:**
+- `load(file_path)` - Use an absolute file path for best results. Relative paths are generated automatically in addition. Returns `FileProxy`
+
+### Proxy
+
+**Methods:**
+- `wrap(prefix:, suffix:)` - Wrap the code inside the prefix and suffix. Handles indentation and line breaks.
+- `export` - Export the modified source code to string
+
+### MethodProxy
+
+**Properties:**
+- `params` - Array of `ParamProxy`s
+- `body` - The method's body `BodyProxy`
+- `return_proxy` - The method's return type `ReturnProxy`
 
 ## Installation
 
