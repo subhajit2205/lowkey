@@ -9,7 +9,7 @@ module Lowkey
     include Query
 
     attr_reader :root_node
-    attr_accessor :lines, :definitions, :dependencies
+    attr_accessor :definitions, :dependencies
 
     def initialize(root_node:, source:)
       super(name: nil, source:)
