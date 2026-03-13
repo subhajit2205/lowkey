@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 require_relative '../interfaces/proxy'
 require_relative '../proxies/class_proxy'
 require_relative '../queries/query'
@@ -17,7 +19,7 @@ module Lowkey
       @root_node = root_node
 
       @definitions = {}
-      @dependencies = []
+      @dependencies = Set.new
     end
 
     def [](keypath)
@@ -32,6 +34,10 @@ module Lowkey
     def upsert_definition(module_proxy:)
       # TODO: Merge duplicate class with existing class.
       @definitions[module_proxy.namespace] ||= module_proxy
+    end
+
+    def upsert_dependency(namespace:)
+      @dependencies.add(namespace)
     end
   end
 end
