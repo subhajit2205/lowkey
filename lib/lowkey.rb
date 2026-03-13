@@ -18,7 +18,7 @@ module Lowkey
       keys[key]
     end
 
-    def load(file_path)
+    def load(file_path, cache: true)
       root_node = Prism.parse_file(file_path).value
       file_proxy = ProxyFactory.file_proxy(root_node:, file_path:)
 
@@ -28,7 +28,7 @@ module Lowkey
 
       AdapterLoader.load(file_proxy:)
 
-      if Lowkey.config.cache
+      if Lowkey.config.cache && cache
         map_file_path(file_proxy:)
         map_definitions(file_proxy:)
       end
