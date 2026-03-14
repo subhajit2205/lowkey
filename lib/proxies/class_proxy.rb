@@ -9,6 +9,14 @@ module Lowkey
 
     attr_reader :namespace
     attr_accessor :private_start_line, :keyed_methods, :class_methods, :instance_methods, :method_calls
+    
+    def start_line
+      @node.location.start_line
+    end
+
+    def end_line
+      @node.location.end_line
+    end
 
     def initialize(node:, name:, namespace:, source:)
       super(name:, source:)
