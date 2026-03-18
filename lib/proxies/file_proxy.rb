@@ -17,7 +17,7 @@ module Lowkey
       @root_node = root_node
 
       @definitions = {}
-      @dependencies = []
+      @dependencies = Set.new
     end
 
     def [](keypath)
@@ -29,9 +29,13 @@ module Lowkey
       # TODO: Slice the lines in a file and replace with the output of the class proxy.
     end
 
-    def upsert_class_proxy(class_proxy:)
+    def upsert_definition(module_proxy:)
       # TODO: Merge duplicate class with existing class.
-      @definitions[class_proxy.namespace] ||= class_proxy
+      @definitions[module_proxy.namespace] ||= module_proxy
+    end
+
+    def upsert_dependency(namespace:)
+      @dependencies.add(namespace)
     end
   end
 end

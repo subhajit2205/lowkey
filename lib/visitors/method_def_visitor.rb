@@ -2,6 +2,7 @@
 
 require_relative '../factories/source_factory'
 require_relative '../factories/proxy_factory'
+require_relative '../proxies/method_proxy'
 require_relative '../queries/query'
 
 module Lowkey
@@ -15,16 +16,16 @@ module Lowkey
 
     def visit(method_node)
       namespace = namespace(node: method_node, parent_map:)
-      class_proxy = file_proxy[namespace]
+      module_proxy = file_proxy[namespace]
       method_proxy = ProxyFactory.method_proxy(method_node:, file_proxy:)
 
-      class_proxy.keyed_methods[method_node.name] = method_proxy
+      module_proxy.keyed_methods[method_node.name] = method_proxy
 
       # TODO: Implemented as tagged methods similar to tagged params.
-      if ClassProxy.class_method?(method_node:, parent_map:)
-        class_proxy.class_methods[method_node.name] = method_proxy
-      else
-        class_proxy.instance_methods[method_node.name] = method_proxy
+      if ModuleProxy.class_method?(method_node:, parent_map:)
+        module_proxy.class_methods[method_node.name] = method_proxy
+      elsif module_proxy.class <= ClassProxy
+        module_proxy.instance_methods[method_node.name] = method_proxy
       end
     end
 

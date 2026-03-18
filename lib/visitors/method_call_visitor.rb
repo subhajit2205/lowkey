@@ -13,17 +13,27 @@ module Lowkey
 
     def visit(node)
       namespace = namespace(node:, parent_map:)
-      class_proxy = @file_proxy[namespace]
-      class_proxy.method_calls << node
+      module_proxy = file_proxy[namespace]
 
-      return unless node.name == :private && node.respond_to?(:start_line) && class_proxy.start_line && class_proxy.end_line
-      return unless node.start_line > class_proxy.start_line && node.start_line < class_proxy.end_line
+      module_proxy.method_calls << node
+      upsert_dependency(node:, namespace:)
 
-      class_proxy.private_start_line = node.start_line
+      return unless node.name == :private && node.respond_to?(:start_line) && module_proxy.start_line && module_proxy.end_line
+      return unless node.start_line > module_proxy.start_line && node.start_line < module_proxy.end_line
+
+      module_proxy.private_start_line = node.start_line
     end
 
     private
 
-    attr_reader :parent_map
+    def upsert_dependency(node:, namespace:)
+      return unless %i[include extend].include?(node.name)
+
+        dependency_name = node.arguments.arguments.first.name.to_s
+        dependency_name = "#{namespace}::#{dependency_name}" unless dependency_name.start_with?('::')
+        file_proxy.upsert_dependency(namespace: dependency_name)
+    end
+
+    attr_reader :file_proxy, :parent_map
   end
 end

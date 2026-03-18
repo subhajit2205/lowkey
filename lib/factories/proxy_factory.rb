@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../factories/source_factory'
+
 require_relative '../proxies/body_proxy'
 require_relative '../proxies/class_proxy'
 require_relative '../proxies/file_proxy'
 require_relative '../proxies/method_proxy'
+require_relative '../proxies/module_proxy'
 require_relative '../proxies/param_proxy'
 require_relative '../proxies/return_proxy'
 
@@ -16,10 +18,15 @@ module Lowkey
         FileProxy.new(root_node:, source:)
       end
 
-      def class_proxy(node:, namespace:, file_path:, lines:)
-        source = SourceFactory.class_source(node:, namespace:, file_path:, lines:)
+      def module_proxy(node:, namespace:, file_path:, lines:)
+        source = SourceFactory.module_source(node:, namespace:, file_path:, lines:)
         name = node.respond_to?(:name) ? node.name : 'Object'
-        ClassProxy.new(node:, name:, namespace:, source:)
+        ModuleProxy.new(node:, name:, namespace:, source:)
+      end
+
+      def class_proxy(node:, namespace:, file_path:, lines:)
+        source = SourceFactory.class_source(node:, file_path:, lines:)
+        ClassProxy.new(node:, name: node.name, namespace:, source:)
       end
 
       def method_proxy(method_node:, file_proxy:)

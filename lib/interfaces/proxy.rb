@@ -10,7 +10,7 @@ module Lowkey
 
     attr_reader :name
 
-    def_delegators :@source, :file_path, :lines, :start_line, :scope
+    def_delegators :@source, :file_path, :lines, :start_line, :end_line, :scope
     def_delegators :@source, :wrap, :export
 
     def initialize(name:, source:)
