@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 require_relative '../interfaces/proxy'
 require_relative '../proxies/class_proxy'
 require_relative '../queries/query'

@@ -25,13 +25,13 @@ module Lowkey
     end
 
     private
-    
+
     def upsert_dependency(node:, namespace:)
-      if [:include, :extend].include?(node.name)
+      return unless %i[include extend].include?(node.name)
+
         dependency_name = node.arguments.arguments.first.name.to_s
         dependency_name = "#{namespace}::#{dependency_name}" unless dependency_name.start_with?('::')
         file_proxy.upsert_dependency(namespace: dependency_name)
-      end
     end
 
     attr_reader :file_proxy, :parent_map

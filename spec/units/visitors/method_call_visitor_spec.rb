@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 require_relative '../../../lib/lowkey'
 require_relative '../../../lib/visitors/method_call_visitor'
 
